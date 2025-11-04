@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const descEl = clone.querySelector(".activity-description");
         descEl.insertAdjacentElement("afterend", availEl);
 
-        // Populate participants list
+        // Populate participants list (with unregister/delete button)
         const participantsList = clone.querySelector(".participants-list");
         participantsList.innerHTML = "";
         if (!details.participants || details.participants.length === 0) {
@@ -43,7 +43,91 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           details.participants.forEach((p) => {
             const li = document.createElement("li");
-            li.textContent = p;
+            li.className = "participant-item";
+
+            const span = document.createElement("span");
+            span.className = "participant-email";
+            span.textContent = p;
+
+            const btn = document.createElement("button");
+            btn.className = "participant-delete";
+            btn.type = "button";
+            btn.setAttribute("aria-label", `Unregister ${p}`);
+            btn.title = "Unregister";
+            btn.innerHTML = "✖"; // simple cross icon
+
+            // Click handler: confirm, call backend DELETE to unregister, and show undo
+            btn.addEventListener("click", async (e) => {
+              e.preventDefault();
+
+              // Ask for confirmation before deleting
+              const confirmed = window.confirm(`Are you sure you want to unregister ${p} from ${name}?`);
+              if (!confirmed) return;
+
+              try {
+                const response = await fetch(
+                  `/activities/${encodeURIComponent(name)}/participants?email=${encodeURIComponent(p)}`,
+                  { method: "DELETE" }
+                );
+
+                const result = await response.json();
+
+                if (response.ok) {
+                  // Show success with an undo action
+                  messageDiv.innerHTML = `${result.message} <button id=\"undo-btn\" class=\"undo-btn\">Undo</button>`;
+                  messageDiv.className = "message success";
+                  messageDiv.classList.remove("hidden");
+
+                  // Handler for undo: re-signup the participant
+                  const undoBtn = messageDiv.querySelector("#undo-btn");
+                  let undoClicked = false;
+                  if (undoBtn) {
+                    undoBtn.addEventListener("click", async () => {
+                      try {
+                        const r2 = await fetch(
+                          `/activities/${encodeURIComponent(name)}/signup?email=${encodeURIComponent(p)}`,
+                          { method: "POST" }
+                        );
+                        const res2 = await r2.json();
+                        if (r2.ok) {
+                          messageDiv.textContent = `Undo successful: ${res2.message}`;
+                          messageDiv.className = "message success";
+                          await fetchActivities();
+                        } else {
+                          messageDiv.textContent = res2.detail || "Failed to undo";
+                          messageDiv.className = "message error";
+                        }
+                      } catch (err) {
+                        messageDiv.textContent = "Failed to undo. Please try again.";
+                        messageDiv.className = "message error";
+                        console.error("Error undoing unregister:", err);
+                      }
+                      undoClicked = true;
+                    });
+                  }
+
+                  // Refresh activities to reflect removal
+                  await fetchActivities();
+
+                  // Hide message after 6 seconds if undo wasn't clicked
+                  setTimeout(() => {
+                    if (!undoClicked) messageDiv.classList.add("hidden");
+                  }, 6000);
+                } else {
+                  messageDiv.textContent = result.detail || "An error occurred";
+                  messageDiv.className = "message error";
+                  messageDiv.classList.remove("hidden");
+                }
+              } catch (error) {
+                messageDiv.textContent = "Failed to unregister. Please try again.";
+                messageDiv.className = "message error";
+                messageDiv.classList.remove("hidden");
+                console.error("Error unregistering:", error);
+              }
+            });
+
+            li.appendChild(span);
+            li.appendChild(btn);
             participantsList.appendChild(li);
           });
         }
