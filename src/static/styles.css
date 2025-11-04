@@ -17,15 +17,29 @@ body {
 
 header {
   text-align: center;
-  padding: 20px 0;
+  padding: 28px 20px; /* increased vertical padding */
   margin-bottom: 30px;
-  background-color: #1a237e;
-  color: white;
-  border-radius: 5px;
+  background: linear-gradient(180deg, #081235 0%, #0f1b4d 40%, #1a237e 100%); /* darker-to-brand gradient */
+  color: #ffffff;
+  border-radius: 10px; /* slightly larger radius for modern look */
+  box-shadow: 0 10px 30px rgba(9, 24, 58, 0.28); /* lift header off the page */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* soft highlight edge */
 }
 
 header h1 {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff; /* strong white for max contrast */
+}
+
+header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95); /* nearly pure white for readability */
+  opacity: 0.98;
 }
 
 main {
@@ -59,19 +73,77 @@ section h3 {
 
 .activity-card {
   margin-bottom: 15px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  padding: 16px;
+  border: 1px solid #e1e7ef;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  box-shadow: 0 6px 14px rgba(16, 40, 80, 0.04);
 }
 
-.activity-card h4 {
-  margin-bottom: 10px;
-  color: #0066cc;
-}
-
-.activity-card p {
+/* header inside card */
+.activity-card .activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 8px;
+
+  /* New: dark on-brand header band for high contrast */
+  background: linear-gradient(90deg, rgba(10,25,70,0.98) 0%, rgba(26,35,126,0.98) 100%);
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #ffffff;
+}
+
+/* Title and time should be white for good contrast */
+.activity-card .activity-title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #ffffff; /* changed to white */
+  font-weight: 600;
+}
+
+.activity-card .activity-time {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.92); /* nearly pure white for readability */
+}
+
+/* description */
+.activity-card .activity-description {
+  margin: 6px 0 10px 0;
+  color: #33475b;
+  font-size: 0.95rem;
+}
+
+/* Participants section */
+.participants {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(52, 84, 114, 0.06);
+}
+
+.participants-heading {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #0f4a82;
+}
+
+.participants-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style: disc;
+  color: #24455f;
+}
+
+.participants-list li {
+  margin: 6px 0;
+  font-size: 0.92rem;
+}
+
+/* placeholder when no participants yet */
+.participants-list .no-participants {
+  color: #7b8b98;
+  font-style: italic;
 }
 
 .form-group {

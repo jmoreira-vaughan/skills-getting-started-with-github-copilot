@@ -12,6 +12,25 @@
       <h2>Extracurricular Activities</h2>
     </header>
 
+    <!-- New: template for activity cards (clone and populate via app.js) -->
+    <template id="activity-card-template">
+      <article class="activity-card" role="article" aria-live="polite">
+        <header class="activity-header">
+          <h4 class="activity-title">Activity Title</h4>
+          <time class="activity-time">Schedule</time>
+        </header>
+
+        <p class="activity-description">Short description of the activity.</p>
+
+        <div class="participants">
+          <h5 class="participants-heading">Participants</h5>
+          <ul class="participants-list" aria-label="Participants list">
+            <li class="no-participants">No participants yet</li>
+          </ul>
+        </div>
+      </article>
+    </template>
+
     <main>
       <section id="activities-container">
         <h3>Available Activities</h3>
